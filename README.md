@@ -27,6 +27,7 @@
 
 ```bash
 pip install -r requirements.txt
+python generate_predictions.py
 streamlit run app.py
 
 ```
