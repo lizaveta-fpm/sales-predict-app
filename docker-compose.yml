@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  airflow:
+    build: .
+    restart: always
+    environment:
+      - AIRFLOW_HOME=/app/airflow
+      - AIRFLOW__CORE__DAGS_FOLDER=/app/dags
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+    volumes:
+      - .:/app
+    ports:
+      - "8080:8080"
+    command: bash -c "airflow db init && airflow standalone"
+
+  streamlit:
+    build: .
+    restart: always
+    volumes:
+      - .:/app
+    ports:
+      - "8501:8501"
+    command: bash -c "streamlit run app.py --server.port=8501 --server.address=0.0.0.0"
+    depends_on:
+      - airflow
