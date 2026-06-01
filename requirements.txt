@@ -1,0 +1,9 @@
+streamlit
+pandas
+numpy
+xgboost
+catboost
+torch --extra-index-url https://download.pytorch.org/whl/cpu
+scikit-learn
+pyarrow
+apache-airflow
