@@ -27,7 +27,7 @@ horizon = st.sidebar.selectbox(
     "Горизонт прогноза (дней)", 
     available_horizons, 
     index=available_horizons.index(16) if 16 in available_horizons else 0,
-    help="Выберите интересующий период планирования закупки"
+    help="Выберите период планирования закупки"
 )
 
 available_models = sorted(db['model_type'].unique().tolist())
