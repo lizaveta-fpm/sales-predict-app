@@ -10,19 +10,22 @@ from sklearn.preprocessing import StandardScaler
 class SalesLSTMWithEmbeddings(nn.Module):
     def __init__(self, num_stores, num_families, store_dim, family_dim, num_numerical, hidden_size=32):
         super().__init__()
-        self.store_emb = nn.Embedding(num_embeddings=num_stores, embedding_dim=store_dim)
-        self.family_emb = nn.Embedding(num_embeddings=num_families, embedding_dim=family_dim)
+        # Передаем размеры позиционно — так код выглядит чище
+        self.store_emb = nn.Embedding(num_stores, store_dim)
+        self.family_emb = nn.Embedding(num_families, family_dim)
         
-        total_input_size = store_dim + family_dim + num_numerical
-        self.lstm = nn.LSTM(input_size=total_input_size, hidden_size=hidden_size, batch_first=True)
+        # Считаем суммарный размер 
+        self.lstm = nn.LSTM(store_dim + family_dim + num_numerical, hidden_size, batch_first=True)
         self.fc = nn.Linear(hidden_size, 1)
-        
+
     def forward(self, store_ids, family_ids, numerical_features):
-        s_vectors = self.store_emb(store_ids)
-        f_vectors = self.family_emb(family_ids)
-        x = torch.cat([s_vectors, f_vectors, numerical_features], dim=-1)
-        lstm_out, _ = self.lstm(x)
-        return self.fc(lstm_out[:, -1, :])
+        # Извлекаем эмбеддинги и склеиваем всё в один тензор 
+        x = torch.cat([self.store_emb(store_ids), self.family_emb(family_ids), numerical_features], dim=-1)
+        
+        #Выходная последовательность и финальные состояния памяти (hidden state, cell state)
+        output_sequence, (hidden_state, cell_state) = self.lstm(x)
+        # берем последний шаг из выходной последовательности:
+        return self.fc(output_sequence[:, -1, :])
 
 
 def load_data():
