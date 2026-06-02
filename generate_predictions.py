@@ -10,7 +10,6 @@ from sklearn.preprocessing import StandardScaler
 class SalesLSTMWithEmbeddings(nn.Module):
     def __init__(self, num_stores, num_families, store_dim, family_dim, num_numerical, hidden_size=32):
         super().__init__()
-        # Передаем размеры позиционно — так код выглядит чище
         self.store_emb = nn.Embedding(num_stores, store_dim)
         self.family_emb = nn.Embedding(num_families, family_dim)
         
