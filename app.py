@@ -7,7 +7,6 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 st.set_page_config(page_title="Прогноз Продаж", layout="wide")
 st.title("📊 Автоматизированное планирование поставок")
 
-
 @st.cache_data
 def load_predictions_database():
     try:
@@ -20,7 +19,6 @@ def load_predictions_database():
         st.stop()
 
 db = load_predictions_database()
-
 
 st.sidebar.header("Параметры аналитики")
 
@@ -46,7 +44,6 @@ families = sorted(global_slice['family'].unique().tolist())
 st.sidebar.header("Выбор объекта")
 selected_store = st.sidebar.selectbox("Номер магазина", stores, index=0)
 selected_family = st.sidebar.selectbox("Категория товара", families, index=0)
-
 
 global_test = global_slice[global_slice['data_type'] == 'test']
 y_g_true = global_test['sales'].values
@@ -77,7 +74,6 @@ local_mae = mean_absolute_error(y_true_local, y_pred_local) if len(y_true_local)
 local_wape = (np.sum(np.abs(y_true_local - y_pred_local)) / np.sum(y_true_local)) * 100 if np.sum(y_true_local) > 0 else 0.0
 
 total_demand = int(np.ceil(item_test['predictions'].sum())) if len(item_test) > 0 else 0
-
 
 col1, col2 = st.columns(2)
 with col1:
@@ -132,3 +128,4 @@ with tab2:
     m_col2.metric("MAE (Средняя ошибка)", f"{global_metrics['mae']:.2f} ед.")
     m_col3.metric("RMSE", f"{global_metrics['rmse']:.2f}")
     m_col4.metric("Коэффициент R²", f"{global_metrics['r2']:.4f}")
+
